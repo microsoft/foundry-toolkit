@@ -7,6 +7,13 @@ on:
         description: "Commit SHA from microsoft-foundry/foundry-samples to pin to"
         required: true
         type: string
+  # TEMP: bootstrap-only — lets us smoke-test the pipeline from the feature
+  # branch before it lands on the default branch (workflow_dispatch requires
+  # the file to exist on the default branch first). Revert this whole block
+  # together with the DEFAULT_COMMIT_SHA env below before merging.
+  push:
+    branches:
+      - yimin/sync-catalog-bootstrap
 
 permissions:
   contents: write
@@ -45,7 +52,10 @@ jobs:
           AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-        run: node .github/scripts/generate_sample_catalog.mjs "${{ inputs.commit_sha }}"
+          # TEMP: bootstrap-only fallback for push-triggered smoke test. Revert
+          # together with the `push` trigger block above before merging.
+          DEFAULT_COMMIT_SHA: '19b441d474ec963c61a509692fdd81d5fb707d71'
+        run: node .github/scripts/generate_sample_catalog.mjs "${{ inputs.commit_sha || env.DEFAULT_COMMIT_SHA }}"
 
       - name: Detect catalog changes
         id: diff
