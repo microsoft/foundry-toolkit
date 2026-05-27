@@ -1,0 +1,527 @@
+{
+    "commitSha": "19b441d474ec963c61a509692fdd81d5fb707d71",
+    "repo": "https://github.com/microsoft-foundry/foundry-samples/",
+    "generatedAt": "2026-05-27T06:40:47Z",
+    "dimensions": {
+        "language": {
+            "title": "Select a Language",
+            "placeholder": "Choose the language for your agent",
+            "options": [
+                {
+                    "id": "python",
+                    "displayName": "Python"
+                },
+                {
+                    "id": "csharp",
+                    "displayName": "C# (.NET)"
+                }
+            ]
+        },
+        "framework": {
+            "title": "Select a Framework",
+            "placeholder": "Choose the framework for your agent",
+            "options": [
+                {
+                    "id": "copilot-sdk",
+                    "displayName": "Copilot SDK"
+                },
+                {
+                    "id": "agent-framework",
+                    "displayName": "Agent Framework"
+                },
+                {
+                    "id": "bring-your-own",
+                    "displayName": "Bring Your Own"
+                }
+            ]
+        },
+        "protocol": {
+            "title": "Select a Protocol",
+            "placeholder": "Choose the protocol for your agent",
+            "options": [
+                {
+                    "id": "responses",
+                    "displayName": "Responses API"
+                },
+                {
+                    "id": "invocations",
+                    "displayName": "Invocations API"
+                }
+            ]
+        }
+    },
+    "templateSelection": {
+        "title": "Select a Template",
+        "placeholder": "Choose a template for your agent"
+    },
+    "templates": [
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "invocations",
+            "displayName": "Basic",
+            "description": "Agent with in-memory session management for multi-turn conversations.",
+            "path": "samples/python/hosted-agents/agent-framework/invocations/01-basic",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Basic",
+            "description": "Agent that supports multi-turn conversations with response tracking.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/01-basic",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Tools",
+            "description": "Agent with custom tools like weather lookup callable during conversation.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/02-tools",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "MCP",
+            "description": "Agent that dynamically discovers and invokes tools from a remote GitHub Copilot MCP server.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/03-mcp",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Toolbox",
+            "description": "Agent that discovers and invokes centrally managed tools from a Foundry Toolbox.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/04-foundry-toolbox",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Workflows",
+            "description": "Processes requests through slogan writing, legal review, and formatting agents in sequence.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/05-workflows",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Files",
+            "description": "Agent that lists, reads, and interprets files using shell and code tools.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/06-files",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Skills",
+            "description": "Agent that discovers and runs local file-based skills like generating PDF travel guides.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/07-skills",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Observability",
+            "description": "Agent with built-in observability and telemetry for diagnostics and monitoring.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/08-observability",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Declarative Customer Support",
+            "description": "Customer support triage agent that routes requests to specialized agents based on conversation history.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/09-declarative-customer-support",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Downstream Azure",
+            "description": "Agent performs data operations on Blob Storage and Service Bus using its own identity.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/10-downstream-azure",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Azure Search RAG",
+            "description": "Answers questions using product documentation and cites sources from a search index.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/11-azure-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Skills",
+            "description": "Agent that loads behavioral guidelines from Foundry Skills at startup for dynamic updates.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/12-foundry-skills",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Memory",
+            "description": "Agent that remembers user facts across sessions using persistent semantic memory.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/13-foundry-memory",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "AG UI",
+            "description": "Agent that streams AG-UI lifecycle events in response to user input.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/ag-ui",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Claude Agent SDK",
+            "description": "Agent that streams responses from a Claude model for plain text input.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/claude-agent-sdk",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Event Grid Trigger",
+            "description": "Agent triggered by Azure Storage events that summarizes uploaded blobs and saves results separately.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/event-grid-trigger",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "copilot-sdk",
+            "protocol": "invocations",
+            "displayName": "GitHub Copilot",
+            "description": "Agent streams Copilot session events with support for multi-turn conversations.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/github-copilot",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Hello World",
+            "description": "Hosted agent that streams a model's reply as a server-sent event.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/hello-world",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Human In The Loop",
+            "description": "Agent that generates proposals and waits for human approval before proceeding.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/human-in-the-loop",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Langgraph Chat",
+            "description": "Conversational agent with session history and built-in time and calculator tools.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/langgraph-chat",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Notetaking Agent",
+            "description": "Agent that saves and retrieves notes with per-session isolation and streaming responses.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/notetaking-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Toolbox",
+            "description": "Agent connects to a toolbox server and enables tool discovery and invocation during chat.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/toolbox",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Background Agent",
+            "description": "Handles long-running research analysis requests with background processing and streaming updates.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/background-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Bring Your Own Toolbox",
+            "description": "Agent connects to a remote toolbox and enables tool invocation during conversations.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/bring-your-own-toolbox",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Env Vars Agent",
+            "description": "Agent that reveals environment variable values with safety policies based on their type.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/env-vars-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Hello World",
+            "description": "Hosted agent that returns a hello world message from a Foundry model using a custom backend.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/hello-world",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Langgraph Chat",
+            "description": "Conversational agent with built-in calculator and time tools, streaming responses.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/langgraph-chat",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Langgraph Toolbox",
+            "description": "Agent that dynamically loads tools from a remote toolbox and handles incoming requests.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/langgraph-toolbox",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Langgraph Toolbox User Identity",
+            "description": "Agent that accesses mail, calendar, and GitHub tools for user-identity scenarios.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/langgraph-toolbox-user-identity",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Notetaking Agent",
+            "description": "Agent that saves and retrieves notes with per-session isolation and streaming responses.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/notetaking-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "OpenAI Agents SDK",
+            "description": "Minimal agent that streams text responses from a Foundry model.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/openai-agents-sdk",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Hello World Invocations Voicelive",
+            "description": "Minimal hosted agent for real-time voice interactions with audio transcription streaming.",
+            "path": "samples/python/hosted-agents/bring-your-own/voicelive/hello-world-invocations-voicelive",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Agent Skills",
+            "description": "Agent that loads behavioral guidelines from Foundry Skills at startup for dynamic updates.",
+            "path": "samples/csharp/hosted-agents/agent-framework/agent-skills",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Azure Search RAG",
+            "description": "Support agent answers questions using a keyword-indexed knowledge base for grounding.",
+            "path": "samples/csharp/hosted-agents/agent-framework/azure-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "File Tools",
+            "description": "Agent answers questions using bundled and user-uploaded files as knowledge sources.",
+            "path": "samples/csharp/hosted-agents/agent-framework/file-tools",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Memory RAG",
+            "description": "Personal coach agent that remembers user preferences and goals across sessions.",
+            "path": "samples/csharp/hosted-agents/agent-framework/foundry-memory-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Toolbox Server Side",
+            "description": "Agent that uses tools from a Foundry Toolbox, invoked server-side by the platform.",
+            "path": "samples/csharp/hosted-agents/agent-framework/foundry-toolbox-server-side",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Hello World",
+            "description": "Minimal hosted agent that responds to user questions and supports multi-turn conversation.",
+            "path": "samples/csharp/hosted-agents/agent-framework/hello-world",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "invocations",
+            "displayName": "Invocations Echo Agent",
+            "description": "Echoes back input messages with a simple prefix for testing agent hosting.",
+            "path": "samples/csharp/hosted-agents/agent-framework/invocations-echo-agent",
+            "requiresModel": false
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Local Tools",
+            "description": "Hotel search assistant that uses local function tools for queries.",
+            "path": "samples/csharp/hosted-agents/agent-framework/local-tools",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "MCP Tools",
+            "description": "Agent answers questions by searching documentation using integrated tool providers.",
+            "path": "samples/csharp/hosted-agents/agent-framework/mcp-tools",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Simple Agent",
+            "description": "General-purpose AI assistant that replies to user input with model-generated responses.",
+            "path": "samples/csharp/hosted-agents/agent-framework/simple-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Text Search RAG",
+            "description": "Agent answers support questions using retrieved passages from external documents.",
+            "path": "samples/csharp/hosted-agents/agent-framework/text-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Workflows",
+            "description": "Workflow chains three translation agents to show intermediate language outputs.",
+            "path": "samples/csharp/hosted-agents/agent-framework/workflows",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "HelloWorld",
+            "description": "Hosted agent that returns a streaming hello world response from a Foundry model.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/invocations/HelloWorld",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Human In The Loop",
+            "description": "Agent that generates proposals and waits for human approval before proceeding.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/invocations/human-in-the-loop",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Notetaking Agent",
+            "description": "Agent that saves and retrieves session-persistent notes with real-time streaming responses.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/invocations/notetaking-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "HelloWorld",
+            "description": "Minimal hosted agent that returns a greeting from a Foundry model using the Responses API.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/HelloWorld",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Background Agent",
+            "description": "Handles research analysis requests asynchronously with background processing and streaming updates.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/background-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Env Vars Agent",
+            "description": "Agent retrieves environment variable values with safety policies based on their type.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/env-vars-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Notetaking Agent",
+            "description": "Agent that saves and retrieves session-persistent notes for each user.",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/notetaking-agent",
+            "requiresModel": true
+        }
+    ]
+}
