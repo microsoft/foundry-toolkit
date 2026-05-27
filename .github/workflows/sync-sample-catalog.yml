@@ -8,9 +8,11 @@ on:
         required: true
         type: string
 
+# Least-privilege for the default GITHUB_TOKEN: only what `actions/checkout`
+# needs. All writes (push branch + create PR) are performed via the GitHub
+# App token generated below, not GITHUB_TOKEN.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 # A single in-flight sync at a time — a re-trigger cancels any earlier run
 # rather than racing it for the same PR branch.
