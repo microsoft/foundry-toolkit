@@ -33,13 +33,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.SYNC_APP_ID }}
-          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -96,7 +89,7 @@ jobs:
         id: labels
         shell: bash
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -134,7 +127,12 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          # Uses the built-in GITHUB_TOKEN; PRs opened with this token will
+          # NOT trigger downstream workflows (GitHub's anti-recursion rule).
+          # That is fine for this repo today — there are no PR checks that
+          # need to run on the auto-PR. If that changes, switch to a GitHub
+          # App token (actions/create-github-app-token@v1).
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.branch.outputs.name }}
           base: ${{ github.ref_name }}
           delete-branch: true
