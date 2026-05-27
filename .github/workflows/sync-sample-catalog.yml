@@ -1,0 +1,188 @@
+name: Sync Sample Catalog
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: "Commit SHA from microsoft-foundry/foundry-samples to pin to"
+        required: true
+        type: string
+
+# Least-privilege for the default GITHUB_TOKEN: only what `actions/checkout`
+# needs. All writes (push branch + create PR) are performed via the GitHub
+# App token generated below, not GITHUB_TOKEN.
+permissions:
+  contents: read
+
+# A single in-flight sync at a time — a re-trigger cancels any earlier run
+# rather than racing it for the same PR branch.
+concurrency:
+  group: sync-sample-catalog-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      PR_LABEL_CANDIDATES: |
+        automated-pr
+        area:samples
+        area:hosted-agent
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.SYNC_APP_ID }}
+          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate sample catalog
+        env:
+          REPO_ROOT: ${{ github.workspace }}
+          GITHUB_TOKEN: ${{ github.token }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+        run: node .github/scripts/generate_sample_catalog.mjs "${{ inputs.commit_sha }}"
+
+      - name: Detect catalog changes
+        id: diff
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          catalog_file="samples/hosted-agent/sample-catalog.json"
+
+          if [[ ! -f "$catalog_file" ]]; then
+            echo "Catalog file not generated."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Stage the file so git diff detects both new and modified files
+          git add "$catalog_file"
+
+          if git diff --cached --quiet -- "$catalog_file"; then
+            echo "No changes to sample catalog."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Catalog has changes:"
+          git diff --cached --stat -- "$catalog_file"
+
+          {
+            echo "## Sample Catalog Sync"
+            echo
+            echo "The sample catalog was regenerated from \`microsoft-foundry/foundry-samples\`."
+            echo
+            echo "### Changed files"
+            echo "- \`$catalog_file\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve pull request labels
+        if: steps.diff.outputs.has_changes == 'true'
+        id: labels
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          existing_labels=$(gh api --paginate repos/${{ github.repository }}/labels --jq '.[].name')
+          matched_labels=""
+
+          while IFS= read -r candidate; do
+            if [[ -z "$candidate" ]]; then
+              continue
+            fi
+
+            if grep -Fqx "$candidate" <<< "$existing_labels"; then
+              matched_labels+="$candidate"
+              matched_labels+=$'\n'
+            fi
+          done <<< "$PR_LABEL_CANDIDATES"
+
+          {
+            echo "labels<<EOF"
+            printf '%s' "$matched_labels"
+            echo
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Generate PR branch name
+        if: steps.diff.outputs.has_changes == 'true'
+        id: branch
+        shell: bash
+        run: |
+          date_suffix=$(date -u +%Y%m%d)
+          echo "name=ci/sync-sample-catalog-${{ github.ref_name }}-${date_suffix}" >> "$GITHUB_OUTPUT"
+
+      - name: Create draft pull request
+        if: steps.diff.outputs.has_changes == 'true'
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: ${{ steps.branch.outputs.name }}
+          base: ${{ github.ref_name }}
+          delete-branch: true
+          draft: always-true
+          commit-message: |
+            ci: sync sample catalog from foundry-samples (${{ github.ref_name }})
+          title: "ci: sync sample catalog from foundry-samples (${{ github.ref_name }})"
+          body: |
+            ## Summary
+            This automated draft PR updates `samples/hosted-agent/sample-catalog.json` by scanning
+            the `microsoft-foundry/foundry-samples` repository for hosted-agent sample templates.
+
+            ## What changed
+            - New templates added or removed based on the upstream repo structure.
+            - `commitSha` pinned to the upstream commit supplied via the `commit_sha` workflow input.
+            - `requiresModel` and `protocol` values re-derived from each sample's `agent.yaml`.
+            - `displayName` derived from each template's folder name; `description` LLM-generated when empty.
+            - PM-edited `displayName` and `description` values are preserved from the previous catalog.
+
+            ## Reviewer Checks
+            - Confirm new templates have correct `language`, `framework`, and `protocol` values.
+            - Review the auto-generated `description` for any new templates.
+            - Confirm no PM-edited display fields were accidentally lost.
+          labels: ${{ steps.labels.outputs.labels }}
+          add-paths: |
+            samples/hosted-agent/sample-catalog.json
+
+      - name: Report PR result
+        if: steps.diff.outputs.has_changes == 'true'
+        shell: bash
+        env:
+          PR_OPERATION: ${{ steps.cpr.outputs.pull-request-operation }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "PR operation: $PR_OPERATION"
+          echo "PR URL: $PR_URL"
+
+          {
+            echo
+            echo "## Pull Request"
+            echo
+            if [[ -n "$PR_URL" ]]; then
+              echo "- Operation: \`$PR_OPERATION\`"
+              echo "- PR: [#${PR_NUMBER:-?}]($PR_URL)"
+            else
+              echo "- No pull request was created or updated (peter-evans/create-pull-request returned no URL)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,8 @@
+{
+    "byPath": {
+        "samples/python/hosted-agents/bring-your-own/invocations/github-copilot": {
+            "framework": "copilot-sdk",
+            "requiresModel": false
+        }
+    }
+}
