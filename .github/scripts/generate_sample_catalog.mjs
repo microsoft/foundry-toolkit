@@ -35,7 +35,7 @@ const OVERRIDES_PATH = join(REPO_ROOT, 'samples', 'hosted-agent', 'sample-overri
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 const LANGUAGES = ['python', 'csharp'];
-const FRAMEWORKS = ['agent-framework', 'bring-your-own'];
+const FRAMEWORKS = ['agent-framework', 'bring-your-own', 'langgraph'];
 
 /** @type {Record<string, {title: string, placeholder: string, options: Record<string, string>}>} */
 const DIMENSION_DEFAULTS = {
@@ -56,6 +56,7 @@ const DIMENSION_DEFAULTS = {
             'copilot-sdk': 'Copilot SDK',
             'agent-framework': 'Agent Framework',
             'bring-your-own': 'Bring Your Own',
+            'langgraph': 'LangGraph',
         },
     },
     protocol: {
