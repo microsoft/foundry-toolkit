@@ -1,7 +1,7 @@
 {
-    "commitSha": "19b441d474ec963c61a509692fdd81d5fb707d71",
+    "commitSha": "ef510c47b3ec768596577ba65ca6b2c2ab015855",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-05-27T06:40:47Z",
+    "generatedAt": "2026-06-01T09:57:41Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -131,6 +131,15 @@
             "language": "python",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Teams Activity",
+            "description": "Agent that answers questions about Teams and calendar, handling messages with file attachments.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/07-teams-activity",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Observability",
             "description": "Agent with built-in observability and telemetry for diagnostics and monitoring.",
             "path": "samples/python/hosted-agents/agent-framework/responses/08-observability",
@@ -179,6 +188,15 @@
             "displayName": "Foundry Memory",
             "description": "Agent that remembers user facts across sessions using persistent semantic memory.",
             "path": "samples/python/hosted-agents/agent-framework/responses/13-foundry-memory",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Browser Automation Agent",
+            "description": "Automates web browsing tasks such as navigation, scraping, and form filling in a remote browser.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/14-browser-automation-agent",
             "requiresModel": true
         },
         {
@@ -266,6 +284,42 @@
             "language": "python",
             "framework": "bring-your-own",
             "protocol": "responses",
+            "displayName": "Hello World",
+            "description": "Real-time agent that relays audio between browser and a managed voice service.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations_ws/hello-world",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Livekit Server",
+            "description": "Voice agent connects to a LiveKit server for real-time audio conversations.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations_ws/livekit-server",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Pipecat Webrtc",
+            "description": "Real-time voice agent with multi-agent pipeline and WebRTC audio media support.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations_ws/pipecat-webrtc",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Pipecat Ws Server",
+            "description": "Voice agent that greets users and checks orders with real-time speech and text streaming.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations_ws/pipecat-ws-server",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
             "displayName": "Background Agent",
             "description": "Handles long-running research analysis requests with background processing and streaming updates.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/background-agent",
@@ -278,6 +332,15 @@
             "displayName": "Bring Your Own Toolbox",
             "description": "Agent connects to a remote toolbox and enables tool invocation during conversations.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/bring-your-own-toolbox",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "Automates web browsers for tasks like form filling and web scraping with session control.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/browser-automation",
             "requiresModel": true
         },
         {
@@ -341,6 +404,15 @@
             "displayName": "OpenAI Agents SDK",
             "description": "Minimal agent that streams text responses from a Foundry model.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/openai-agents-sdk",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Handoff Langgraph Responses Voicelive",
+            "description": "Customer support agent with triage and handoff between refund and order specialists.",
+            "path": "samples/python/hosted-agents/bring-your-own/voicelive/handoff-langgraph-responses-voicelive",
             "requiresModel": true
         },
         {
@@ -437,9 +509,27 @@
             "language": "csharp",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Observability",
+            "description": "Agent with built-in observability, emitting traces, metrics, and logs for monitoring.",
+            "path": "samples/csharp/hosted-agents/agent-framework/observability",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Simple Agent",
             "description": "General-purpose AI assistant that replies to user input with model-generated responses.",
             "path": "samples/csharp/hosted-agents/agent-framework/simple-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Teams Activity",
+            "description": "Agent that answers questions about Teams and calendar, and handles file attachments.",
+            "path": "samples/csharp/hosted-agents/agent-framework/teams-activity",
             "requiresModel": true
         },
         {
