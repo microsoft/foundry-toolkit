@@ -35,7 +35,7 @@ const OVERRIDES_PATH = join(REPO_ROOT, 'samples', 'hosted-agent', 'sample-overri
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 const LANGUAGES = ['python', 'csharp'];
-const FRAMEWORKS = ['agent-framework', 'bring-your-own'];
+const FRAMEWORKS = ['agent-framework', 'bring-your-own', 'langgraph'];
 
 /** @type {Record<string, {title: string, placeholder: string, options: Record<string, string>}>} */
 const DIMENSION_DEFAULTS = {
@@ -56,6 +56,7 @@ const DIMENSION_DEFAULTS = {
             'copilot-sdk': 'Copilot SDK',
             'agent-framework': 'Agent Framework',
             'bring-your-own': 'Bring Your Own',
+            'langgraph': 'LangGraph',
         },
     },
     protocol: {
@@ -75,6 +76,11 @@ const TEMPLATE_SELECTION = {
 
 // Path segments must be alphanumeric, hyphens, underscores, or dots
 const SAFE_PATH_SEGMENT = /^[a-zA-Z0-9._-]+$/;
+
+// Path segments that should never surface as catalog templates, even when
+// they contain a valid `agent.yaml`. Use this to drop upstream folders we
+// don't want in the picker yet (e.g. `invocations_ws` LiveKit samples).
+const BLOCKED_PATH_SEGMENTS = new Set(['invocations_ws']);
 
 /**
  * Collected anomaly messages surfaced in CI step summary so reviewers do not
@@ -199,7 +205,14 @@ function findTemplateDirsUnder(tree, prefix) {
             if (!rel) {
                 return false;
             }
-            return rel.split('/').every((seg) => isSafePathSegment(seg));
+            const segments = rel.split('/');
+            if (!segments.every((seg) => isSafePathSegment(seg))) {
+                return false;
+            }
+            // Drop templates that live under a blocked segment (e.g.
+            // `invocations_ws`) so upstream additions don't auto-leak into
+            // the catalog before we explicitly opt them in.
+            return !segments.some((seg) => BLOCKED_PATH_SEGMENTS.has(seg));
         })
         // Lexicographic sort serves two purposes: (1) a parent path always
         // sorts before its descendants, so the `startsWith` check below
