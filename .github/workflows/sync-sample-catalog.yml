@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       commit_sha:
-        description: "Commit SHA from microsoft-foundry/foundry-samples to pin to"
-        required: true
+        description: "Commit SHA from microsoft-foundry/foundry-samples to pin to (leave blank to use the latest main commit)"
+        required: false
         type: string
+        default: ""
 
 # Least-privilege for the default GITHUB_TOKEN: only what `actions/checkout`
 # needs. All writes (push branch + create PR) are performed via the GitHub
@@ -47,6 +48,31 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Resolve commit SHA
+        id: resolve-sha
+        shell: bash
+        env:
+          INPUT_SHA: ${{ inputs.commit_sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$INPUT_SHA" ]]; then
+            sha="$INPUT_SHA"
+            source="user-supplied input"
+          else
+            # No SHA provided: pin to the current tip of foundry-samples@main
+            # so the dispatcher doesn't have to look it up by hand.
+            sha=$(gh api repos/microsoft-foundry/foundry-samples/commits/main --jq .sha)
+            source="latest microsoft-foundry/foundry-samples@main"
+          fi
+          if [[ ! "$sha" =~ ^[0-9a-f]{7,40}$ ]]; then
+            echo "Resolved SHA is not a valid git object: $sha" >&2
+            exit 1
+          fi
+          echo "Using SHA $sha (source: $source)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "- Pinned SHA: \`$sha\` ($source)" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Generate sample catalog
         env:
           REPO_ROOT: ${{ github.workspace }}
@@ -54,7 +80,7 @@ jobs:
           AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-        run: node .github/scripts/generate_sample_catalog.mjs "${{ inputs.commit_sha }}"
+        run: node .github/scripts/generate_sample_catalog.mjs "${{ steps.resolve-sha.outputs.sha }}"
 
       - name: Detect catalog changes
         id: diff
