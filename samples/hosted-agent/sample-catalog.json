@@ -1,7 +1,7 @@
 {
-    "commitSha": "ef510c47b3ec768596577ba65ca6b2c2ab015855",
+    "commitSha": "ad7fe2846bb0065dadc45f60fb51df1ba655e05d",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-06-01T10:21:01Z",
+    "generatedAt": "2026-06-03T08:49:33Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -205,6 +205,15 @@
         },
         {
             "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Optimization Travel Approver",
+            "description": "Agent that reviews and approves travel requests for employees.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/15-optimization-travel-approver",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "AG UI",
@@ -372,6 +381,24 @@
             "displayName": "OpenAI Agents SDK",
             "description": "Minimal agent that streams text responses from a Foundry model.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/openai-agents-sdk",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Optimization Customer Support",
+            "description": "Customer support agent for troubleshooting and product assistance.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/optimization-customer-support",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Optimization Hello World",
+            "description": "Minimal hosted agent that returns a static greeting message.",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/optimization-hello-world",
             "requiresModel": true
         },
         {
