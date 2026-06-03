@@ -1,7 +1,7 @@
 {
-    "commitSha": "19b441d474ec963c61a509692fdd81d5fb707d71",
+    "commitSha": "107d6fde1a098036ef47563e9fdc13ce3b0ec356",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-05-27T06:40:47Z",
+    "generatedAt": "2026-06-03T08:37:47Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -131,6 +131,15 @@
             "language": "python",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Teams Activity",
+            "description": "",
+            "path": "samples/python/hosted-agents/agent-framework/responses/07-teams-activity",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Observability",
             "description": "Agent with built-in observability and telemetry for diagnostics and monitoring.",
             "path": "samples/python/hosted-agents/agent-framework/responses/08-observability",
@@ -179,6 +188,15 @@
             "displayName": "Foundry Memory",
             "description": "Agent that remembers user facts across sessions using persistent semantic memory.",
             "path": "samples/python/hosted-agents/agent-framework/responses/13-foundry-memory",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Browser Automation Agent",
+            "description": "",
+            "path": "samples/python/hosted-agents/agent-framework/responses/14-browser-automation-agent",
             "requiresModel": true
         },
         {
@@ -284,6 +302,15 @@
             "language": "python",
             "framework": "bring-your-own",
             "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "",
+            "path": "samples/python/hosted-agents/bring-your-own/responses/browser-automation",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
             "displayName": "Env Vars Agent",
             "description": "Agent that reveals environment variable values with safety policies based on their type.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/env-vars-agent",
@@ -341,6 +368,15 @@
             "displayName": "OpenAI Agents SDK",
             "description": "Minimal agent that streams text responses from a Foundry model.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/openai-agents-sdk",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Handoff Langgraph Responses Voicelive",
+            "description": "",
+            "path": "samples/python/hosted-agents/bring-your-own/voicelive/handoff-langgraph-responses-voicelive",
             "requiresModel": true
         },
         {
@@ -437,9 +473,27 @@
             "language": "csharp",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Observability",
+            "description": "",
+            "path": "samples/csharp/hosted-agents/agent-framework/observability",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Simple Agent",
             "description": "General-purpose AI assistant that replies to user input with model-generated responses.",
             "path": "samples/csharp/hosted-agents/agent-framework/simple-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Teams Activity",
+            "description": "",
+            "path": "samples/csharp/hosted-agents/agent-framework/teams-activity",
             "requiresModel": true
         },
         {
