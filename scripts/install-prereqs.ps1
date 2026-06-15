@@ -143,6 +143,43 @@ function Invoke-NativeOutput {
     }
 }
 
+function Update-SessionPath {
+    <#
+    .SYNOPSIS
+        Refresh $env:Path in the current PowerShell session by re-reading the
+        Machine and User PATH values from the registry. Needed after MSI/winget
+        installers add new directories to PATH, because the running shell
+        inherits PATH from its parent at startup and does not see live updates.
+
+        Machine PATH (HKLM) and User PATH (HKCU) are read independently so that
+        if a corporate policy blocks the HKLM read, the HKCU half still
+        contributes.
+    #>
+    $machine = $null
+    $user    = $null
+
+    try {
+        $machine = [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+    }
+    catch {
+        # Possible causes: Constrained Language mode, ACLs on
+        # HKLM\System\CurrentControlSet\Control\Session Manager\Environment,
+        # EDR/AV blocking registry access. Non-fatal.
+    }
+
+    try {
+        $user = [System.Environment]::GetEnvironmentVariable('Path', 'User')
+    }
+    catch {
+        # Should almost never fail — HKCU\Environment is owned by the user.
+    }
+
+    $parts = @($machine, $user) | Where-Object { $_ }
+    if ($parts) {
+        $env:Path = ($parts -join ';')
+    }
+}
+
 # ---------------------------------------------------------------------------
 # Step 1: Azure CLI (winget)
 #   Docs: https://learn.microsoft.com/cli/azure/install-azure-cli-windows
@@ -167,7 +204,12 @@ function Install-AzCli {
         '--silent'
     )
 
-    Write-Info 'Azure CLI installed. Open a new terminal so the updated PATH is picked up before running az.'
+    Update-SessionPath
+    if (Test-Command -Name 'az') {
+        Write-Info 'Azure CLI installed and PATH refreshed in this session.'
+    } else {
+        Write-Warn 'Azure CLI installed, but az is not yet on PATH in this session. Open a new terminal before running az manually.'
+    }
 }
 
 # ---------------------------------------------------------------------------
@@ -193,6 +235,13 @@ function Install-Azd {
         '--accept-source-agreements',
         '--silent'
     )
+
+    Update-SessionPath
+    if (Test-Command -Name 'azd') {
+        Write-Info 'azd installed and PATH refreshed in this session.'
+    } else {
+        Write-Warn 'azd installed, but azd is not yet on PATH in this session. Open a new terminal before running azd manually.'
+    }
 }
 
 # ---------------------------------------------------------------------------
