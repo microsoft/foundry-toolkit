@@ -1,18 +1,15 @@
 # Microsoft Foundry prerequisite scripts
 
-Helper scripts to install (or remove) everything you need to build with
-Microsoft Foundry: Azure CLI, Azure Developer CLI (`azd`), the `azd` Foundry
-extension, the `microsoft-foundry` agent skill, and the VS Code Microsoft
-Foundry extension.
+Helper scripts to install everything you need to build with Microsoft Foundry:
+Azure CLI, Azure Developer CLI (`azd`), the `azd` Foundry extension, the
+`microsoft-foundry` agent skill, and the VS Code Microsoft Foundry extension.
 
 ## Files
 
-| Script | Platform | Purpose |
-| --- | --- | --- |
-| [install-prereqs.ps1](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/install-prereqs.ps1) | Windows | Install everything |
-| [install-prereqs.sh](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/install-prereqs.sh) | macOS, Debian/Ubuntu | Install everything |
-| [uninstall-prereqs.ps1](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/uninstall-prereqs.ps1) | Windows | Remove everything (test helper) |
-| [uninstall-prereqs.sh](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/uninstall-prereqs.sh) | macOS, Debian/Ubuntu | Remove everything (test helper) |
+| Script | Platform |
+| --- | --- |
+| [install-prereqs.ps1](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/install-prereqs.ps1) | Windows |
+| [install-prereqs.sh](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/install-prereqs.sh) | macOS, Debian/Ubuntu |
 
 ## Usage
 
@@ -22,27 +19,23 @@ Windows (PowerShell):
 
 ```powershell
 iex (irm https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/install-prereqs.ps1)
-iex (irm https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/uninstall-prereqs.ps1)
 ```
 
 macOS / Linux (bash):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/install-prereqs.sh | bash
-curl -fsSL https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/uninstall-prereqs.sh | bash
 ```
 
-Or, if you've cloned the repo, run the local copies:
+Or, if you've cloned the repo, run the local copy:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install-prereqs.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\uninstall-prereqs.ps1
 ```
 
 ```bash
-chmod +x ./scripts/install-prereqs.sh ./scripts/uninstall-prereqs.sh
+chmod +x ./scripts/install-prereqs.sh
 ./scripts/install-prereqs.sh
-./scripts/uninstall-prereqs.sh
 ```
 
 ## What gets installed
@@ -54,8 +47,7 @@ chmod +x ./scripts/install-prereqs.sh ./scripts/uninstall-prereqs.sh
 5. **VS Code Microsoft Foundry extension** — `ms-windows-ai-studio.windows-ai-studio` installed into every variant on `PATH` (`code`, `code-insiders`)
 
 Each step is idempotent: it is skipped if the tool is already present, so the
-install script is safe to re-run. The uninstall scripts are the inverse —
-also idempotent — so install → uninstall → install cycles work for testing.
+install script is safe to re-run.
 
 ## Behaviour & limitations
 
@@ -72,11 +64,19 @@ also idempotent — so install → uninstall → install cycles work for testing
   `PATH`. Enable via VS Code → command palette → `Shell Command: Install 'code' command in PATH`.
 - A single step's failure does **not** abort the rest; the final summary lists
   failures and the script exits non-zero only if at least one step failed.
-- Uninstall scripts do **not** remove user data (`~/.azure`, `~/.azd`, etc.).
 
-## Re-running for development
+---
 
-The intended dev loop:
+<details>
+<summary><b>Maintainers: uninstall scripts (testing only)</b></summary>
+
+[uninstall-prereqs.ps1](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/uninstall-prereqs.ps1)
+and [uninstall-prereqs.sh](https://github.com/microsoft/foundry-toolkit/blob/quickinstall/scripts/uninstall-prereqs.sh)
+exist solely so the install scripts can be exercised repeatedly during
+development. They are not intended for end users and intentionally do not
+remove user data (`~/.azure`, `~/.azd`, etc.).
+
+Typical dev loop:
 
 ```bash
 ./scripts/install-prereqs.sh    # install
@@ -85,6 +85,8 @@ The intended dev loop:
 ./scripts/install-prereqs.sh    # reinstall from a clean state
 ```
 
-If `az` or `azd` still appears on `PATH` immediately after uninstall, open a
-new terminal — the shell needs to refresh `PATH` from the registry / shell
-profile.
+On Windows the Azure CLI uninstall step requires an elevated shell; if `az` or
+`azd` still appears on `PATH` immediately after uninstall, open a new terminal
+so the shell refreshes `PATH`.
+
+</details>
