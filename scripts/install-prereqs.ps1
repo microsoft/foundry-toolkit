@@ -474,8 +474,17 @@ Test-Install
 Write-Info ''
 if ($script:Failures.Count -gt 0) {
     Write-Warn ("Completed with {0} failed step(s): {1}" -f $script:Failures.Count, ($script:Failures -join ', '))
-    exit 1
+    $script:ExitCode = 1
 } else {
     Write-Done 'All steps completed.'
-    exit 0
+    $script:ExitCode = 0
+}
+
+# When invoked via `powershell -File ...` $PSCommandPath is set and exit kills
+# only the subprocess. When invoked via `iex (irm ...)` the script runs in the
+# caller's session, so `exit` would close the user's terminal. In that case
+# expose the result through $global:LASTEXITCODE and just return.
+$global:LASTEXITCODE = $script:ExitCode
+if ($PSCommandPath) {
+    exit $script:ExitCode
 }

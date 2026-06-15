@@ -352,8 +352,15 @@ Test-Uninstall
 Write-Info ''
 if ($script:Failures.Count -gt 0) {
     Write-Warn ("Completed with {0} failed step(s): {1}" -f $script:Failures.Count, ($script:Failures -join ', '))
-    exit 1
+    $script:ExitCode = 1
 } else {
     Write-Done 'All steps completed.'
-    exit 0
+    $script:ExitCode = 0
+}
+
+# See install-prereqs.ps1 for the rationale: avoid `exit` when running via
+# iex/dot-sourcing so we don't close the user's interactive PowerShell host.
+$global:LASTEXITCODE = $script:ExitCode
+if ($PSCommandPath) {
+    exit $script:ExitCode
 }
