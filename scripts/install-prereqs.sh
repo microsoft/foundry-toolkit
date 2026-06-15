@@ -240,8 +240,13 @@ Install_FoundrySkill() {
     tar_path="${tmp_root}/release.tar.gz"
     extract_to="${tmp_root}/extracted"
     mkdir -p "$extract_to"
-    # Cleanup on exit (function scope, not whole script).
-    trap 'rm -rf "$tmp_root"' RETURN
+    # Cleanup on function exit. Double-quote so $tmp_root is expanded NOW
+    # (at trap install time, while the variable is still in scope) instead of
+    # at trap fire time (after the function returns, when the local has gone
+    # out of scope and `set -u` would treat it as an unbound variable).
+    # mktemp -d paths never contain single quotes, so simple ' ' wrapping
+    # is safe.
+    trap "rm -rf -- '$tmp_root'" RETURN
 
     log_info "Downloading tarball to ${tar_path} ..."
     if ! curl -fsSL -H 'User-Agent: foundry-prereqs-installer' -o "$tar_path" "$tarball"; then
