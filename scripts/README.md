@@ -13,18 +13,18 @@ Azure CLI, Azure Developer CLI (`azd`), the `azd` Foundry extension, the
 
 ## Usage
 
-Run directly from the repo without cloning:
+Run directly with the official aka.ms shortlinks:
 
 Windows (PowerShell):
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/install-prereqs.ps1)
+iex (irm https://aka.ms/foundry-devpack-install.ps1)
 ```
 
 macOS / Linux (bash):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/microsoft/foundry-toolkit/quickinstall/scripts/install-prereqs.sh | bash
+curl -fsSL https://aka.ms/foundry-devpack-install.sh | bash
 ```
 
 Or, if you've cloned the repo, run the local copy:
