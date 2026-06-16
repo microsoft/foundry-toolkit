@@ -46,6 +46,9 @@ SKILLS_ROOT="${HOME}/.agents/skills"
 VSCODE_EXTENSION_ID="ms-windows-ai-studio.windows-ai-studio"
 VSCODE_VARIANTS=(code code-insiders)
 
+AZ_CLI_MIN_VERSION="2.77.0"
+AZD_MIN_VERSION="1.25.3"
+
 AZ_CLI_DEB_INSTALLER='https://azurecliprod.blob.core.windows.net/$root/deb_install.sh'
 AZD_INSTALL_SCRIPT='https://aka.ms/install-azd.sh'
 
@@ -99,15 +102,52 @@ run_step() {
     fi
 }
 
+# Print the installed Azure CLI version (e.g. "2.87.0"), or empty if az is
+# not on PATH or its version cannot be parsed.
+get_az_cli_version() {
+    has_cmd az || return 0
+    az version --output json 2>/dev/null \
+        | grep -oE '"azure-cli"[[:space:]]*:[[:space:]]*"[^"]+"' \
+        | head -n1 \
+        | sed -E 's/.*"azure-cli"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/'
+}
+
+# Print the installed azd version (e.g. "1.25.6"), or empty if not parseable.
+get_azd_version() {
+    has_cmd azd || return 0
+    azd version 2>/dev/null \
+        | head -n1 \
+        | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
+        | head -n1
+}
+
+# Return 0 if $1 (candidate) >= $2 (minimum) using semver-aware sort -V.
+# Empty $1 is treated as not-installed and never satisfies the minimum.
+version_ge() {
+    [ -n "$1" ] || return 1
+    [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1)" = "$1" ]
+}
+
 # -------------------- Step 1: Azure CLI --------------------------------------
 # Docs:
 #   macOS : https://learn.microsoft.com/cli/azure/install-azure-cli-macos
 #   Linux : https://learn.microsoft.com/cli/azure/install-azure-cli-linux
 
 Install_AzCli() {
+    local cur
+    cur=$(get_az_cli_version)
+    if [ -n "$cur" ]; then
+        if version_ge "$cur" "$AZ_CLI_MIN_VERSION"; then
+            log_skip "Azure CLI ${cur} already installed (>= ${AZ_CLI_MIN_VERSION})."
+            return 0
+        fi
+        log_info "Azure CLI ${cur} is below minimum ${AZ_CLI_MIN_VERSION}. Upgrading via 'az upgrade'..."
+        # az upgrade is built into Azure CLI 2.11+; --yes skips the prompt.
+        az upgrade --yes
+        return
+    fi
     if has_cmd az; then
-        log_skip "Azure CLI (az) already on PATH."
-        return 0
+        log_warn "az is on PATH but its version could not be determined; reinstalling."
     fi
 
     case "$(os_kind)" in
@@ -144,9 +184,22 @@ Install_AzCli() {
 # Docs: https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd
 
 Install_Azd() {
+    local cur
+    cur=$(get_azd_version)
+    if [ -n "$cur" ]; then
+        if version_ge "$cur" "$AZD_MIN_VERSION"; then
+            log_skip "azd ${cur} already installed (>= ${AZD_MIN_VERSION})."
+            return 0
+        fi
+        log_info "azd ${cur} is below minimum ${AZD_MIN_VERSION}. Upgrading via 'azd update'..."
+        # azd update detects how azd was originally installed (winget /
+        # choco / install-script / brew / .deb / .rpm) and delegates to
+        # the matching upgrade mechanism.
+        azd update
+        return
+    fi
     if has_cmd azd; then
-        log_skip "azd already on PATH."
-        return 0
+        log_warn "azd is on PATH but its version could not be determined; reinstalling."
     fi
 
     case "$(os_kind)" in
@@ -339,11 +392,25 @@ check() {
 verify_install() {
     log_step "--- Verification ---"
 
-    if has_cmd az;  then check "az"  az version --output tsv;
-    else log_warn "az not on PATH."; fi
+    local az_v
+    az_v=$(get_az_cli_version)
+    if [ -z "$az_v" ]; then
+        log_warn "az : not on PATH or version not parseable"
+    elif version_ge "$az_v" "$AZ_CLI_MIN_VERSION"; then
+        log_ok   "az : ${az_v} (>= ${AZ_CLI_MIN_VERSION})"
+    else
+        log_warn "az : ${az_v} (below minimum ${AZ_CLI_MIN_VERSION})"
+    fi
 
-    if has_cmd azd; then check "azd" azd version;
-    else log_warn "azd not on PATH."; fi
+    local azd_v
+    azd_v=$(get_azd_version)
+    if [ -z "$azd_v" ]; then
+        log_warn "azd : not on PATH or version not parseable"
+    elif version_ge "$azd_v" "$AZD_MIN_VERSION"; then
+        log_ok   "azd : ${azd_v} (>= ${AZD_MIN_VERSION})"
+    else
+        log_warn "azd : ${azd_v} (below minimum ${AZD_MIN_VERSION})"
+    fi
 
     if is_azd_ext_installed "$AZD_FOUNDRY_EXT_ID"; then
         log_ok   "azd ext ${AZD_FOUNDRY_EXT_ID} : installed"

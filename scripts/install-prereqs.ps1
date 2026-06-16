@@ -41,7 +41,9 @@ $ProgressPreference    = 'SilentlyContinue'  # speeds up Invoke-WebRequest
 
 $script:Config = [pscustomobject]@{
     AzCliWingetId           = 'Microsoft.AzureCLI'
+    AzCliMinVersion         = [version]'2.77.0'
     AzdWingetId             = 'microsoft.azd'
+    AzdMinVersion           = [version]'1.25.3'
     AzdFoundryExtensionId   = 'microsoft.foundry'
     SkillRepo               = 'microsoft/azure-skills'
     SkillName               = 'microsoft-foundry'
@@ -180,6 +182,46 @@ function Update-SessionPath {
     }
 }
 
+function Get-AzCliVersion {
+    <#
+    .SYNOPSIS
+        Return the installed Azure CLI version as a [version], or $null if az
+        is not on PATH or its version cannot be parsed.
+    #>
+    if (-not (Test-Command -Name 'az')) { return $null }
+    try {
+        $output = Invoke-NativeOutput -File 'az' -Arguments @('version', '--output', 'json')
+        if ($LASTEXITCODE -ne 0) { return $null }
+        # Use regex rather than ConvertFrom-Json so that informational stderr
+        # lines (e.g. "You have N updates available...") merged in by
+        # Invoke-NativeOutput cannot break parsing.
+        if ($output -match '"azure-cli"\s*:\s*"([^"]+)"') {
+            return [version]$Matches[1]
+        }
+    }
+    catch {}
+    return $null
+}
+
+function Get-AzdVersion {
+    <#
+    .SYNOPSIS
+        Return the installed azd version as a [version], or $null if azd is
+        not on PATH or its version cannot be parsed.
+    #>
+    if (-not (Test-Command -Name 'azd')) { return $null }
+    try {
+        $output = Invoke-NativeOutput -File 'azd' -Arguments @('version')
+        if ($LASTEXITCODE -ne 0) { return $null }
+        # First line example: "azd version 1.25.6 (commit ...) (stable)"
+        if ($output -match 'azd\s+version\s+(\d+\.\d+\.\d+)') {
+            return [version]$Matches[1]
+        }
+    }
+    catch {}
+    return $null
+}
+
 # ---------------------------------------------------------------------------
 # Step 1: Azure CLI (winget)
 #   Docs: https://learn.microsoft.com/cli/azure/install-azure-cli-windows
@@ -187,8 +229,21 @@ function Update-SessionPath {
 
 function Install-AzCli {
     if (Test-Command -Name 'az') {
-        Write-Skip 'Azure CLI (az) already on PATH.'
-        return
+        $cur = Get-AzCliVersion
+        $min = $script:Config.AzCliMinVersion
+        if ($cur -and $cur -ge $min) {
+            Write-Skip "Azure CLI $cur already installed (>= $min)."
+            return
+        }
+        if ($cur) {
+            Write-Info "Azure CLI $cur is below minimum $min. Upgrading via 'az upgrade'..."
+            # az upgrade is built into Azure CLI 2.11+; --yes skips the prompt
+            # and --all also upgrades installed extensions.
+            Invoke-NativeCommand -File 'az' -Arguments @('upgrade', '--yes')
+            Update-SessionPath
+            return
+        }
+        Write-Warn "az is on PATH but its version could not be determined; reinstalling via winget."
     }
     if (-not (Test-Command -Name 'winget')) {
         throw 'winget is not available. Install App Installer from the Microsoft Store, then retry.'
@@ -219,8 +274,22 @@ function Install-AzCli {
 
 function Install-Azd {
     if (Test-Command -Name 'azd') {
-        Write-Skip 'azd already on PATH.'
-        return
+        $cur = Get-AzdVersion
+        $min = $script:Config.AzdMinVersion
+        if ($cur -and $cur -ge $min) {
+            Write-Skip "azd $cur already installed (>= $min)."
+            return
+        }
+        if ($cur) {
+            Write-Info "azd $cur is below minimum $min. Upgrading via 'azd update'..."
+            # azd update detects how azd was originally installed (winget /
+            # choco / install-script / brew / .deb / .rpm) and delegates to
+            # the matching upgrade mechanism.
+            Invoke-NativeCommand -File 'azd' -Arguments @('update')
+            Update-SessionPath
+            return
+        }
+        Write-Warn "azd is on PATH but its version could not be determined; reinstalling via winget."
     }
     if (-not (Test-Command -Name 'winget')) {
         throw 'winget is not available. Install App Installer from the Microsoft Store, then retry.'
@@ -417,13 +486,19 @@ function Test-Install {
     Write-Step '--- Verification ---'
 
     Invoke-Check -Name 'az' -Probe {
-        if (-not (Test-Command -Name 'az')) { throw 'az not on PATH' }
-        (& az version --output tsv 2>$null | Select-Object -First 1)
+        $v = Get-AzCliVersion
+        if (-not $v) { throw 'az not on PATH or version not parseable' }
+        $min = $script:Config.AzCliMinVersion
+        if ($v -lt $min) { throw "$v (below minimum $min)" }
+        return "$v (>= $min)"
     }
 
     Invoke-Check -Name 'azd' -Probe {
-        if (-not (Test-Command -Name 'azd')) { throw 'azd not on PATH' }
-        (& azd version 2>$null | Select-Object -First 1)
+        $v = Get-AzdVersion
+        if (-not $v) { throw 'azd not on PATH or version not parseable' }
+        $min = $script:Config.AzdMinVersion
+        if ($v -lt $min) { throw "$v (below minimum $min)" }
+        return "$v (>= $min)"
     }
 
     Invoke-Check -Name "azd ext $($script:Config.AzdFoundryExtensionId)" -Probe {
