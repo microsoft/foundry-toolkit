@@ -77,10 +77,20 @@ const TEMPLATE_SELECTION = {
 // Path segments must be alphanumeric, hyphens, underscores, or dots
 const SAFE_PATH_SEGMENT = /^[a-zA-Z0-9._-]+$/;
 
-// Path segments that should never surface as catalog templates, even when
-// they contain a valid `agent.yaml`. Use this to drop upstream folders we
-// don't want in the picker yet (e.g. `invocations_ws` LiveKit samples).
-const BLOCKED_PATH_SEGMENTS = new Set(['invocations_ws']);
+// Category segments allowed at the position immediately under a framework
+// (`<framework>/<category>/...`). Upstream groups nested templates under these
+// folders. This is an ALLOW-LIST: any other category (e.g. `a2a`,
+// `invocations_ws`) is treated as not-yet-supported and dropped, so new
+// upstream folders never auto-leak into the picker — opt them in here. Flat
+// templates that sit directly under a framework (e.g. csharp
+// `agent-framework/hello-world`) have no category segment and are always
+// surfaced (see findTemplateDirsUnder).
+const ALLOWED_CATEGORY_SEGMENTS = new Set(['responses', 'invocations', 'voicelive']);
+
+// De-dupes the per-category "skipped" log line so an excluded category that
+// spans many templates (e.g. `a2a`) is reported once, not once per template.
+/** @type {Set<string>} */
+const skippedCategoriesLogged = new Set();
 
 /**
  * Collected anomaly messages surfaced in CI step summary so reviewers do not
@@ -192,6 +202,12 @@ async function fetchRepoTree(ref) {
  * `.`, e.g. `.claude/skills`) are skipped, as are segments that fail the
  * `SAFE_PATH_SEGMENT` check.
  *
+ * Nested templates must live under an allow-listed category segment
+ * (`ALLOWED_CATEGORY_SEGMENTS`); flat templates directly under the framework
+ * (csharp's `agent-framework/<template>` layout) have no category and are
+ * always kept. This fail-closed rule keeps unsupported upstream groupings
+ * (e.g. `a2a`, `invocations_ws`) out of the catalog until they are opted in.
+ *
  * @param {Array<{path: string, type: string}>} tree
  * @param {string} prefix Path prefix ending in `/`, e.g. `samples/python/hosted-agents/agent-framework/`.
  * @returns {string[]} Repo-relative template directory paths, outermost only.
@@ -209,10 +225,24 @@ function findTemplateDirsUnder(tree, prefix) {
             if (!segments.every((seg) => isSafePathSegment(seg))) {
                 return false;
             }
-            // Drop templates that live under a blocked segment (e.g.
-            // `invocations_ws`) so upstream additions don't auto-leak into
-            // the catalog before we explicitly opt them in.
-            return !segments.some((seg) => BLOCKED_PATH_SEGMENTS.has(seg));
+            // Flat templates sit directly under the framework
+            // (`<framework>/<template>`, e.g. csharp `agent-framework/hello-world`)
+            // and have no category segment — always surface them.
+            if (segments.length === 1) {
+                return true;
+            }
+            // Nested templates (`<framework>/<category>/...`) must live under an
+            // allow-listed category. Anything else (e.g. `a2a`, `invocations_ws`)
+            // is dropped so new upstream groupings don't auto-leak into the picker.
+            const category = segments[0];
+            if (ALLOWED_CATEGORY_SEGMENTS.has(category)) {
+                return true;
+            }
+            if (!skippedCategoriesLogged.has(category)) {
+                skippedCategoriesLogged.add(category);
+                console.log(`Skipping category "${category}" (not in ALLOWED_CATEGORY_SEGMENTS); e.g. ${dir}`);
+            }
+            return false;
         })
         // Lexicographic sort serves two purposes: (1) a parent path always
         // sorts before its descendants, so the `startsWith` check below
