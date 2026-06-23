@@ -1,7 +1,7 @@
 {
-    "commitSha": "d3bb92638f131ce0fff1fe67862130d5b190383f",
+    "commitSha": "ae60814c3ef01078f43619c27249e914d5de5fb6",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-06-09T01:54:22Z",
+    "generatedAt": "2026-06-23T08:21:12Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -59,6 +59,24 @@
         "placeholder": "Choose a template for your agent"
     },
     "templates": [
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Caller",
+            "description": "Agent that delegates questions to a remote specialist and summarizes their answers.",
+            "path": "samples/python/hosted-agents/agent-framework/a2a/01-delegation/caller",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Executor",
+            "description": "Answers arithmetic and math questions as a specialized expert agent.",
+            "path": "samples/python/hosted-agents/agent-framework/a2a/01-delegation/executor",
+            "requiresModel": true
+        },
         {
             "language": "python",
             "framework": "agent-framework",
@@ -162,6 +180,15 @@
             "language": "python",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Downstream Azure",
+            "description": "Agent that reads and writes blobs and messages in two Azure services using its own identity.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/10-downstream-azure",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Azure Search RAG",
             "description": "Answers questions using product documentation and cites sources from a search index.",
             "path": "samples/python/hosted-agents/agent-framework/responses/11-azure-search-rag",
@@ -205,6 +232,15 @@
         },
         {
             "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Content Safety Guardrail",
+            "description": "Agent that filters prompts and responses for harmful content using a safety policy.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/16-content-safety-guardrail",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "AG UI",
@@ -220,6 +256,24 @@
             "description": "Agent that streams responses from a Claude model for plain text input.",
             "path": "samples/python/hosted-agents/bring-your-own/invocations/claude-agent-sdk",
             "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Diagnostic Agent",
+            "description": "Performs network probes and returns a JSON report on hostname reachability.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/diagnostic-agent",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Event Grid Trigger",
+            "description": "Processes new blobs by summarizing their contents and saving results to a summary container.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/event-grid-trigger",
+            "requiresModel": true
         },
         {
             "language": "python",
@@ -422,6 +476,24 @@
         {
             "language": "python",
             "framework": "langgraph",
+            "protocol": "responses",
+            "displayName": "A2a Caller",
+            "description": "Concierge agent that delegates specialist questions to a remote expert agent.",
+            "path": "samples/python/hosted-agents/langgraph/a2a/a2a-caller",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "langgraph",
+            "protocol": "responses",
+            "displayName": "A2a Executor",
+            "description": "Math expert agent that answers questions and explains arithmetic step by step.",
+            "path": "samples/python/hosted-agents/langgraph/a2a/a2a-executor",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "langgraph",
             "protocol": "invocations",
             "displayName": "Langgraph Chat",
             "description": "Multi-turn chat agent with tools for current time and math calculations.",
@@ -531,6 +603,15 @@
             "language": "csharp",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "Agent that automates web browsing, scraping, and form filling in a remote browser.",
+            "path": "samples/csharp/hosted-agents/agent-framework/browser-automation",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "File Tools",
             "description": "Agent answers questions using bundled and user-uploaded files as knowledge sources.",
             "path": "samples/csharp/hosted-agents/agent-framework/file-tools",
@@ -633,6 +714,15 @@
             "displayName": "Text Search RAG",
             "description": "Agent answers support questions using retrieved passages from external documents.",
             "path": "samples/csharp/hosted-agents/agent-framework/text-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Toolbox Auth Paths",
+            "description": "Agent toolbox demonstrates different authentication paths for accessing upstream tools.",
+            "path": "samples/csharp/hosted-agents/agent-framework/toolbox-auth-paths",
             "requiresModel": true
         },
         {
