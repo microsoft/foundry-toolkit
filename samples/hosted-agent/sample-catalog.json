@@ -1,7 +1,7 @@
 {
-    "commitSha": "d3bb92638f131ce0fff1fe67862130d5b190383f",
+    "commitSha": "ae60814c3ef01078f43619c27249e914d5de5fb6",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-06-09T01:54:22Z",
+    "generatedAt": "2026-06-23T09:25:42Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -162,6 +162,15 @@
             "language": "python",
             "framework": "agent-framework",
             "protocol": "responses",
+            "displayName": "Downstream Azure",
+            "description": "Agent performs data operations on Blob Storage and Service Bus using its own identity.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/10-downstream-azure",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
             "displayName": "Azure Search RAG",
             "description": "Answers questions using product documentation and cites sources from a search index.",
             "path": "samples/python/hosted-agents/agent-framework/responses/11-azure-search-rag",
@@ -205,6 +214,15 @@
         },
         {
             "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Content Safety Guardrail",
+            "description": "Agent screens prompts and responses for harmful content based on a safety policy.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/16-content-safety-guardrail",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "AG UI",
@@ -220,6 +238,24 @@
             "description": "Agent that streams responses from a Claude model for plain text input.",
             "path": "samples/python/hosted-agents/bring-your-own/invocations/claude-agent-sdk",
             "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Diagnostic Agent",
+            "description": "Runs network probes on hostnames and returns a JSON report of connectivity results.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/diagnostic-agent",
+            "requiresModel": false
+        },
+        {
+            "language": "python",
+            "framework": "bring-your-own",
+            "protocol": "invocations",
+            "displayName": "Event Grid Trigger",
+            "description": "Processes new blobs in Azure Storage by summarizing content and saving results to a summary container.",
+            "path": "samples/python/hosted-agents/bring-your-own/invocations/event-grid-trigger",
+            "requiresModel": true
         },
         {
             "language": "python",
@@ -495,24 +531,6 @@
             "language": "csharp",
             "framework": "agent-framework",
             "protocol": "responses",
-            "displayName": "Caller",
-            "description": "Concierge agent that delegates questions to a remote specialist and summarizes the answers.",
-            "path": "samples/csharp/hosted-agents/agent-framework/a2a/01-delegation/caller",
-            "requiresModel": true
-        },
-        {
-            "language": "csharp",
-            "framework": "agent-framework",
-            "protocol": "responses",
-            "displayName": "Executor",
-            "description": "Answers arithmetic and math questions as an expert agent.",
-            "path": "samples/csharp/hosted-agents/agent-framework/a2a/01-delegation/executor",
-            "requiresModel": true
-        },
-        {
-            "language": "csharp",
-            "framework": "agent-framework",
-            "protocol": "responses",
             "displayName": "Agent Skills",
             "description": "Agent that loads behavioral guidelines from Foundry Skills at startup for dynamic updates.",
             "path": "samples/csharp/hosted-agents/agent-framework/agent-skills",
@@ -525,6 +543,15 @@
             "displayName": "Azure Search RAG",
             "description": "Support agent answers questions using a keyword-indexed knowledge base for grounding.",
             "path": "samples/csharp/hosted-agents/agent-framework/azure-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "Automates web browsing, scraping, and form filling in a remote Chromium browser.",
+            "path": "samples/csharp/hosted-agents/agent-framework/browser-automation",
             "requiresModel": true
         },
         {
@@ -633,6 +660,15 @@
             "displayName": "Text Search RAG",
             "description": "Agent answers support questions using retrieved passages from external documents.",
             "path": "samples/csharp/hosted-agents/agent-framework/text-search-rag",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Toolbox Auth Paths",
+            "description": "Agent toolbox demonstrates different authentication methods for accessing upstream tools.",
+            "path": "samples/csharp/hosted-agents/agent-framework/toolbox-auth-paths",
             "requiresModel": true
         },
         {
