@@ -1,7 +1,7 @@
 {
-    "commitSha": "ae60814c3ef01078f43619c27249e914d5de5fb6",
+    "commitSha": "d268eada402bd5a16002a882e20bf4f969d78b9a",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-06-23T09:25:42Z",
+    "generatedAt": "2026-06-24T07:30:28Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -219,6 +219,15 @@
             "displayName": "Content Safety Guardrail",
             "description": "Agent screens prompts and responses for harmful content based on a safety policy.",
             "path": "samples/python/hosted-agents/agent-framework/responses/16-content-safety-guardrail",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Iq Toolbox",
+            "description": "Answers user questions using a knowledge base accessed through a remote toolbox connection.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/17-foundry-iq-toolbox",
             "requiresModel": true
         },
         {
@@ -723,6 +732,15 @@
             "displayName": "Background Agent",
             "description": "Handles research analysis requests asynchronously with background processing and streaming updates.",
             "path": "samples/csharp/hosted-agents/bring-your-own/responses/background-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/browser-automation",
             "requiresModel": true
         },
         {
