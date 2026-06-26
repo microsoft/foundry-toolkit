@@ -143,7 +143,7 @@ This release marks a major milestone: the **[Foundry Toolkit](https://marketplac
 
 - **Hosted Agent**
   - **Hosted Agent Scaffolding**: Refreshed UI and workflow for clearer project setup.
-  - **Dropped ACA Data-Plane Support**: Hosted Agents now target Foundry exclusively.
+  - **Dropped ACA Data-Plane Support**: Hosted Agents now target ADC exclusively.
 - **Agent Tools and Toolboxes**
   - **Tools Catalog Redesign**: Improved layout, filtering, and tool metadata.
   - **"Vector Store" Renamed to "Knowledge Index"**: Terminology aligned with Microsoft Foundry.
