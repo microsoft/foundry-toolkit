@@ -32,7 +32,7 @@ This release expands the agent tooling story in Foundry Toolkit with **Skills**,
   - **Manage routines**: Edit, rename, duplicate, resume, pause, and delete routines from the list and detail views.
 - **Hosted Agents**
   - **Code-asset download for direct code deployment**: Download the source code asset for code-deployed Hosted Agents via a new download API and UI action.
-  - **Delete agent**: Delete Hosted Agents from the tree view, the recent-agents list, and the ADC playground.
+  - **Delete agent**: Delete Hosted Agents from the tree view, the recent-agents list, and the agent playground.
 - **Agent Builder**: Added a **Copy project endpoint** action to quickly copy your Foundry project endpoint.
 - **VNet-restricted projects**: Foundry projects with public network access disabled now show a **VNet required** label in the resources tree when you're not connected to an approved Azure Virtual Network (VNet). The label explains that the project can only be reached from an approved VNet — with a link to the [private network how-to guide](https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link) — and reminds you to refresh the project after connecting.
 
@@ -130,7 +130,7 @@ This release marks a major milestone: the **[Foundry Toolkit](https://marketplac
   - **Continuous Evaluation Settings**: New page to configure ongoing evaluation for deployed Hosted Agents.
   - **Evaluations Node**: One-click access to evaluation runs and results from the Foundry project tree.
 - **Hosted Agent**
-  - **Hosted Agent ZIP Code Deploy**: Deploy your agent source as a ZIP package directly to ADC.
+  - **Hosted Agent ZIP Code Deploy**: Deploy your agent source as a ZIP package directly to Foundry.
   - **Hosted Agent Bring-Your-Own-Image (BYOI)**: Deploy from a pre-built container image in your own Azure Container Registry.
 - **Agent Tools and Toolboxes**
   - **WorkIQ as a Built-in Tool**: Native WorkIQ tool experience in the Toolbox — first-class integration powered by A2A connections, no MCP fallback required. End-to-end toolbox creation with WorkIQ works out of the box.
@@ -143,7 +143,7 @@ This release marks a major milestone: the **[Foundry Toolkit](https://marketplac
 
 - **Hosted Agent**
   - **Hosted Agent Scaffolding**: Refreshed UI and workflow for clearer project setup.
-  - **Dropped ACA Data-Plane Support**: Hosted Agents now target ADC exclusively.
+  - **Dropped ACA Data-Plane Support**: Hosted Agents now target Foundry exclusively.
 - **Agent Tools and Toolboxes**
   - **Tools Catalog Redesign**: Improved layout, filtering, and tool metadata.
   - **"Vector Store" Renamed to "Knowledge Index"**: Terminology aligned with Microsoft Foundry.
