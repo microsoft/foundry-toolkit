@@ -32,7 +32,7 @@ This release expands the agent tooling story in Foundry Toolkit with **Skills**,
   - **Manage routines**: Edit, rename, duplicate, resume, pause, and delete routines from the list and detail views.
 - **Hosted Agents**
   - **Code-asset download for direct code deployment**: Download the source code asset for code-deployed Hosted Agents via a new download API and UI action.
-  - **Delete agent**: Delete Hosted Agents from the tree view, the recent-agents list, and the agent playground.
+  - **Delete agent**: Delete Hosted Agents from the tree view, the recent-agents list, and the Hosted Agent Playground.
 - **Agent Builder**: Added a **Copy project endpoint** action to quickly copy your Foundry project endpoint.
 - **VNet-restricted projects**: Foundry projects with public network access disabled now show a **VNet required** label in the resources tree when you're not connected to an approved Azure Virtual Network (VNet). The label explains that the project can only be reached from an approved VNet — with a link to the [private network how-to guide](https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link) — and reminds you to refresh the project after connecting.
 
