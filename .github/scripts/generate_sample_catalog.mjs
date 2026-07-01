@@ -34,8 +34,17 @@ const OVERRIDES_PATH = join(REPO_ROOT, 'samples', 'hosted-agent', 'sample-overri
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
-const LANGUAGES = ['python', 'csharp'];
-const FRAMEWORKS = ['agent-framework', 'bring-your-own', 'langgraph'];
+// Languages, frameworks, and protocols are discovered dynamically from the
+// samples repo tree (see discoverLanguagesAndFrameworks / parseAgentYaml)
+// instead of being restricted by an allowlist. These blacklists are the
+// explicit escape hatch to exclude a specific discovered value; empty by
+// default means "no restriction" — everything discovered is kept.
+/** @type {string[]} */
+const BLOCKED_LANGUAGES = [];
+/** @type {string[]} */
+const BLOCKED_FRAMEWORKS = [];
+/** @type {string[]} */
+const BLOCKED_PROTOCOLS = [];
 
 /** @type {Record<string, {title: string, placeholder: string, options: Record<string, string>}>} */
 const DIMENSION_DEFAULTS = {
@@ -194,6 +203,47 @@ async function fetchRepoTree(ref) {
 }
 
 /**
+ * Discover the languages and frameworks present in the samples repo tree,
+ * then drop any listed in the (empty by default) BLOCKED_LANGUAGES /
+ * BLOCKED_FRAMEWORKS blacklists. A "language" is the path segment directly
+ * under `samples/` that owns a `hosted-agents/` folder; a "framework" is the
+ * segment directly under `hosted-agents/`. Discovering these dynamically —
+ * instead of hard-coding an allowlist — means new upstream languages or
+ * frameworks are picked up automatically, while the blacklists remain an
+ * explicit way to exclude a specific value. Hidden or unsafe segments (those
+ * failing isSafePathSegment, e.g. `.github`) are ignored.
+ *
+ * @param {Array<{path: string, type: string}>} tree
+ * @returns {{ languages: string[], frameworks: string[] }}
+ */
+function discoverLanguagesAndFrameworks(tree) {
+    /** @type {Set<string>} */
+    const languages = new Set();
+    /** @type {Set<string>} */
+    const frameworks = new Set();
+    const pattern = /^samples\/([^/]+)\/hosted-agents\/([^/]+)(?:\/|$)/;
+
+    for (const entry of tree) {
+        const match = entry.path.match(pattern);
+        if (!match) {
+            continue;
+        }
+        const [, language, framework] = match;
+        if (isSafePathSegment(language) && !BLOCKED_LANGUAGES.includes(language)) {
+            languages.add(language);
+        }
+        if (isSafePathSegment(framework) && !BLOCKED_FRAMEWORKS.includes(framework)) {
+            frameworks.add(framework);
+        }
+    }
+
+    return {
+        languages: [...languages].sort(),
+        frameworks: [...frameworks].sort(),
+    };
+}
+
+/**
  * Find sample template directories under a `hosted-agents/<framework>/` prefix.
  * A template is identified by the presence of an `agent.yaml`. When nested
  * agent.yaml files exist (e.g. a sub-agent declared inside a parent sample),
@@ -293,19 +343,21 @@ function inferProtocolFromPath(templatePath) {
  * Minimal parser for agent.yaml. Extracts the declared protocol(s) and
  * whether the sample exposes the AZURE_AI_MODEL_DEPLOYMENT_NAME env var
  * (used as a heuristic for `requiresModel`). Does NOT use eval or a real
- * YAML library — a regex-y scan is sufficient for our two fields.
+ * YAML library — a regex-y scan is sufficient for our two fields. Any
+ * declared protocol is accepted except those listed in BLOCKED_PROTOCOLS
+ * (empty by default).
  * @param {string} content
- * @returns {{ protocols: Array<'responses' | 'invocations'>, hasModelEnv: boolean }}
+ * @returns {{ protocols: string[], hasModelEnv: boolean }}
  */
 function parseAgentYaml(content) {
-    /** @type {{ protocols: Array<'responses' | 'invocations'>, hasModelEnv: boolean }} */
+    /** @type {{ protocols: string[], hasModelEnv: boolean }} */
     const result = { protocols: [], hasModelEnv: false };
 
     for (const line of content.split('\n')) {
         const stripped = line.trim();
         if (stripped.startsWith('- protocol:')) {
             const value = stripped.split(':')[1]?.trim();
-            if (value === 'responses' || value === 'invocations') {
+            if (value && !BLOCKED_PROTOCOLS.includes(value)) {
                 result.protocols.push(value);
             }
         }
@@ -321,7 +373,7 @@ function parseAgentYaml(content) {
  * Fetch and parse agent.yaml for a sample directory.
  * @param {string} samplePath
  * @param {string} ref
- * @returns {Promise<{ protocols: Array<'responses' | 'invocations'>, hasModelEnv: boolean } | null>}
+ * @returns {Promise<{ protocols: string[], hasModelEnv: boolean } | null>}
  */
 async function fetchAgentYaml(samplePath, ref) {
     const rawUrl = `https://raw.githubusercontent.com/microsoft-foundry/foundry-samples/${ref}/${samplePath}/agent.yaml`;
@@ -537,10 +589,12 @@ function displayNameFromPath(samplePath) {
  * Scan the foundry-samples repo and build the flat template list. Uses one
  * recursive git-tree call to enumerate every `agent.yaml` under each
  * `<language>/hosted-agents/<framework>/` prefix, regardless of intermediate
- * directories. This supports both the canonical layout
- * (`<framework>/<protocol>/<template>`), the flat layout
- * (`<framework>/<template>`), and category-grouped layouts such as
- * `bring-your-own/voicelive/hello-world-invocations-voicelive`.
+ * directories. Languages and frameworks are discovered dynamically from the
+ * tree (see discoverLanguagesAndFrameworks) rather than hard-coded, then
+ * filtered through the BLOCKED_LANGUAGES/BLOCKED_FRAMEWORKS blacklists. This
+ * supports both the canonical layout (`<framework>/<protocol>/<template>`),
+ * the flat layout (`<framework>/<template>`), and category-grouped layouts
+ * such as `bring-your-own/voicelive/hello-world-invocations-voicelive`.
  *
  * @param {string} commitSha
  * @returns {Promise<Array<{language: string, framework: string, protocol: string, displayName: string, description: string, path: string, requiresModel: boolean}>>}
@@ -554,8 +608,10 @@ async function scanTemplates(commitSha) {
         warn(`GitHub git-tree API returned truncated=true for ${commitSha}; some samples may be missing from the catalog. Consider pinning to a smaller subtree or re-running.`);
     }
 
-    for (const language of LANGUAGES) {
-        for (const framework of FRAMEWORKS) {
+    const { languages, frameworks } = discoverLanguagesAndFrameworks(tree);
+
+    for (const language of languages) {
+        for (const framework of frameworks) {
             const prefix = `samples/${language}/hosted-agents/${framework}/`;
             const templateDirs = findTemplateDirsUnder(tree, prefix);
 
@@ -566,7 +622,7 @@ async function scanTemplates(commitSha) {
                     continue;
                 }
 
-                /** @type {'responses' | 'invocations'} */
+                /** @type {string} */
                 const protocol = agentInfo.protocols.length > 0
                     ? agentInfo.protocols[0]
                     : inferProtocolFromPath(templatePath);
