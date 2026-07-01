@@ -86,18 +86,17 @@ const TEMPLATE_SELECTION = {
 // Path segments must be alphanumeric, hyphens, underscores, or dots
 const SAFE_PATH_SEGMENT = /^[a-zA-Z0-9._-]+$/;
 
-// Category segments allowed at the position immediately under a framework
-// (`<framework>/<category>/...`). Upstream groups nested templates under these
-// folders. This is an ALLOW-LIST: any other category (e.g. `a2a`,
-// `invocations_ws`) is treated as not-yet-supported and dropped, so new
-// upstream folders never auto-leak into the picker — opt them in here. Flat
-// templates that sit directly under a framework (e.g. csharp
-// `agent-framework/hello-world`) have no category segment and are always
-// surfaced (see findTemplateDirsUnder).
-const ALLOWED_CATEGORY_SEGMENTS = new Set(['responses', 'invocations', 'voicelive']);
+// Category segments to EXCLUDE at the position immediately under a framework
+// (`<framework>/<category>/...`). This is a BLACK-LIST: empty by default means
+// every discovered category is surfaced; add a segment here to drop an upstream
+// grouping you don't want in the picker yet. Flat templates that sit directly
+// under a framework (e.g. csharp `agent-framework/hello-world`) have no category
+// segment and are always surfaced (see findTemplateDirsUnder).
+/** @type {Set<string>} */
+const BLOCKED_CATEGORY_SEGMENTS = new Set();
 
 // De-dupes the per-category "skipped" log line so an excluded category that
-// spans many templates (e.g. `a2a`) is reported once, not once per template.
+// spans many templates is reported once, not once per template.
 /** @type {Set<string>} */
 const skippedCategoriesLogged = new Set();
 
@@ -252,11 +251,11 @@ function discoverLanguagesAndFrameworks(tree) {
  * `.`, e.g. `.claude/skills`) are skipped, as are segments that fail the
  * `SAFE_PATH_SEGMENT` check.
  *
- * Nested templates must live under an allow-listed category segment
- * (`ALLOWED_CATEGORY_SEGMENTS`); flat templates directly under the framework
- * (csharp's `agent-framework/<template>` layout) have no category and are
- * always kept. This fail-closed rule keeps unsupported upstream groupings
- * (e.g. `a2a`, `invocations_ws`) out of the catalog until they are opted in.
+ * Nested templates are kept unless their category segment is listed in
+ * `BLOCKED_CATEGORY_SEGMENTS` (empty by default, so everything is surfaced);
+ * flat templates directly under the framework (csharp's
+ * `agent-framework/<template>` layout) have no category and are always kept.
+ * Add a segment to the blacklist to drop an unwanted upstream grouping.
  *
  * @param {Array<{path: string, type: string}>} tree
  * @param {string} prefix Path prefix ending in `/`, e.g. `samples/python/hosted-agents/agent-framework/`.
@@ -281,16 +280,16 @@ function findTemplateDirsUnder(tree, prefix) {
             if (segments.length === 1) {
                 return true;
             }
-            // Nested templates (`<framework>/<category>/...`) must live under an
-            // allow-listed category. Anything else (e.g. `a2a`, `invocations_ws`)
-            // is dropped so new upstream groupings don't auto-leak into the picker.
+            // Nested templates (`<framework>/<category>/...`) are kept unless the
+            // category is explicitly blacklisted. Empty blacklist => everything is
+            // surfaced (fail-open), matching the language/framework/protocol lists.
             const category = segments[0];
-            if (ALLOWED_CATEGORY_SEGMENTS.has(category)) {
+            if (!BLOCKED_CATEGORY_SEGMENTS.has(category)) {
                 return true;
             }
             if (!skippedCategoriesLogged.has(category)) {
                 skippedCategoriesLogged.add(category);
-                console.log(`Skipping category "${category}" (not in ALLOWED_CATEGORY_SEGMENTS); e.g. ${dir}`);
+                console.log(`Skipping category "${category}" (in BLOCKED_CATEGORY_SEGMENTS); e.g. ${dir}`);
             }
             return false;
         })
