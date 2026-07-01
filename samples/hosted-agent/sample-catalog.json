@@ -1,7 +1,7 @@
 {
-    "commitSha": "ae60814c3ef01078f43619c27249e914d5de5fb6",
+    "commitSha": "d268eada402bd5a16002a882e20bf4f969d78b9a",
     "repo": "https://github.com/microsoft-foundry/foundry-samples/",
-    "generatedAt": "2026-06-23T09:05:34Z",
+    "generatedAt": "2026-06-24T07:30:28Z",
     "dimensions": {
         "language": {
             "title": "Select a Language",
@@ -163,7 +163,7 @@
             "framework": "agent-framework",
             "protocol": "responses",
             "displayName": "Downstream Azure",
-            "description": "Agent performs operations on Blob Storage and Service Bus using its own cloud identity.",
+            "description": "Agent performs data operations on Blob Storage and Service Bus using its own identity.",
             "path": "samples/python/hosted-agents/agent-framework/responses/10-downstream-azure",
             "requiresModel": true
         },
@@ -208,7 +208,7 @@
             "framework": "agent-framework",
             "protocol": "responses",
             "displayName": "Optimization Travel Approver",
-            "description": "Approves or rejects travel requests based on provided details and approval criteria.",
+            "description": "Agent that reviews and approves travel requests for employees.",
             "path": "samples/python/hosted-agents/agent-framework/responses/15-optimization-travel-approver",
             "requiresModel": true
         },
@@ -217,8 +217,17 @@
             "framework": "agent-framework",
             "protocol": "responses",
             "displayName": "Content Safety Guardrail",
-            "description": "Agent that filters prompts and responses for harmful content using a safety policy.",
+            "description": "Agent screens prompts and responses for harmful content based on a safety policy.",
             "path": "samples/python/hosted-agents/agent-framework/responses/16-content-safety-guardrail",
+            "requiresModel": true
+        },
+        {
+            "language": "python",
+            "framework": "agent-framework",
+            "protocol": "responses",
+            "displayName": "Foundry Iq Toolbox",
+            "description": "Answers user questions using a knowledge base accessed through a remote toolbox connection.",
+            "path": "samples/python/hosted-agents/agent-framework/responses/17-foundry-iq-toolbox",
             "requiresModel": true
         },
         {
@@ -244,7 +253,7 @@
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "Diagnostic Agent",
-            "description": "Performs network probes and returns a JSON report on hostname reachability.",
+            "description": "Runs network probes on hostnames and returns a JSON report of connectivity results.",
             "path": "samples/python/hosted-agents/bring-your-own/invocations/diagnostic-agent",
             "requiresModel": false
         },
@@ -253,7 +262,7 @@
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "Event Grid Trigger",
-            "description": "Processes new blobs in Azure Storage by summarizing their contents and saving results separately.",
+            "description": "Processes new blobs in Azure Storage by summarizing content and saving results to a summary container.",
             "path": "samples/python/hosted-agents/bring-your-own/invocations/event-grid-trigger",
             "requiresModel": true
         },
@@ -415,7 +424,7 @@
             "framework": "bring-your-own",
             "protocol": "responses",
             "displayName": "Optimization Hello World",
-            "description": "Minimal hosted agent that responds to greetings using a custom optimization service.",
+            "description": "Minimal hosted agent that returns a static greeting message.",
             "path": "samples/python/hosted-agents/bring-your-own/responses/optimization-hello-world",
             "requiresModel": true
         },
@@ -424,7 +433,7 @@
             "framework": "bring-your-own",
             "protocol": "responses",
             "displayName": "Foreground Background Agents Responses Voicelive",
-            "description": "Agent architecture that delegates long-running tasks to a background worker for async results.",
+            "description": "Voice agent that routes quick replies to users and delegates long tasks to a background worker.",
             "path": "samples/python/hosted-agents/bring-your-own/voicelive/foreground-background-agents-responses-voicelive",
             "requiresModel": true
         },
@@ -451,7 +460,7 @@
             "framework": "bring-your-own",
             "protocol": "invocations",
             "displayName": "Hotel Booking Invocations Voicelive",
-            "description": "Hotel booking agent with voice and UI actions, streaming responses and session state.",
+            "description": "Hotel booking agent that handles speech and UI actions with session state and streaming.",
             "path": "samples/python/hosted-agents/bring-your-own/voicelive/hotel-booking-invocations-voicelive",
             "requiresModel": true
         },
@@ -478,7 +487,7 @@
             "framework": "langgraph",
             "protocol": "responses",
             "displayName": "Langgraph Toolbox",
-            "description": "Agent accesses web search and GitHub Copilot tools via a credential-managed toolbox.",
+            "description": "Agent that uses a toolbox for web search and GitHub Copilot MCP tools with managed credentials.",
             "path": "samples/python/hosted-agents/langgraph/responses/02-langgraph-toolbox",
             "requiresModel": true
         },
@@ -550,7 +559,7 @@
             "framework": "agent-framework",
             "protocol": "responses",
             "displayName": "Browser Automation",
-            "description": "Automates browsing, web scraping, and form filling in a remote Chromium browser.",
+            "description": "Automates web browsing, scraping, and form filling in a remote Chromium browser.",
             "path": "samples/csharp/hosted-agents/agent-framework/browser-automation",
             "requiresModel": true
         },
@@ -667,7 +676,7 @@
             "framework": "agent-framework",
             "protocol": "responses",
             "displayName": "Toolbox Auth Paths",
-            "description": "Agent toolbox demonstrates different authentication paths for accessing upstream tools.",
+            "description": "Agent toolbox demonstrates different authentication methods for accessing upstream tools.",
             "path": "samples/csharp/hosted-agents/agent-framework/toolbox-auth-paths",
             "requiresModel": true
         },
@@ -723,6 +732,15 @@
             "displayName": "Background Agent",
             "description": "Handles research analysis requests asynchronously with background processing and streaming updates.",
             "path": "samples/csharp/hosted-agents/bring-your-own/responses/background-agent",
+            "requiresModel": true
+        },
+        {
+            "language": "csharp",
+            "framework": "bring-your-own",
+            "protocol": "responses",
+            "displayName": "Browser Automation",
+            "description": "",
+            "path": "samples/csharp/hosted-agents/bring-your-own/responses/browser-automation",
             "requiresModel": true
         },
         {
